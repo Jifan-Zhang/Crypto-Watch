@@ -11,7 +11,7 @@ while(True):
     try:
         payload = requests.get("http://api.coincap.io/v2/markets?baseSymbol=cny&quoteSymbol=usd",allow_redirects=True).content
     except:
-        raise ValueError("Failed to fetch payload.")
+        driver.send("USD/CNY Error", "Failed to get USD/CNY Payload.")
         break
     payload = eval(payload.decode('utf-8').replace("null","\"null\""))
     rate = round(1/float(payload["data"][0]["priceQuote"]), 4)
@@ -23,5 +23,5 @@ while(True):
                 .strftime("%Y-%m-%d %H:%M:%S")
         msg = f"USD/CNY {'increased' if rate>last_rate else 'decreased'} from {last_rate} to {rate}.\n{time}"
         driver.send("USD/CNY Exchange Rate", msg)
-        sleep(randint(8,12))
+        sleep(randint(10,30))
     last_rate = rate
